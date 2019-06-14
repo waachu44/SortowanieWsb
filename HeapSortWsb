@@ -1,0 +1,157 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Diagnostics;
+using System.IO;
+
+namespace HeapSortWsb
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            //int[] tab = GenAsc(50000); // Wygenerowana tablica liczb rosnących
+           //int[] tab = GenDsc(50000); // Wygenerowana tablica liczb malejących
+           int[] tab = GetNumber(50000); // Wygenerowana tablica liczb losowych
+            SortVshape(tab); // Z wygenerowanej tablicy liczb losowych, została przesortowana na tablice liczb V kształtnych
+           // int[] tab = GenConstant(50000); // Wygenerowana tablica liczy stałej
+            Sort(tab);
+
+            Console.ReadKey();
+        }
+        public static int[] GetNumber(int a)
+        {
+            Random rand = new Random();
+            int[] tab = new int[a];
+
+            for (int i = 0; i < tab.Length; i++)
+            {
+                tab[i] = rand.Next(100);
+            }
+            return tab;
+        }
+        ////public static int[] GenAsc(int a)
+        //{
+        //    Random rand = new Random();
+        //    int[] tab = new int[a];
+
+        //    for (int i = 0; i < tab.Length; i++)
+        //    {
+        //        tab[i] = i;
+        //    }
+        //    return tab;
+        //}
+        //public static int[] GenDsc(int a)
+        //{
+        //    Random rand = new Random();
+        //    int[] tab = new int[a];
+
+        //    for (int i = 0; i < tab.Length; i++)
+        //    {
+        //        tab[i] = tab.Length - i;
+        //    }
+        //    return tab;
+        //}
+
+        //public static int[] GenConstant(int a)
+        //{
+        //    Random rand = new Random();
+        //    int[] tab = new int[a];
+
+        //    for (int i = 0; i < tab.Length; i++)
+        //    {
+        //        tab[i] = 3;
+        //    }
+        //    return tab;
+        //}
+        public static void SortVshape(int[] tab)
+        {
+            for (uint i = 1; i < tab.Length; i++)
+            {
+                int j = tab.Length / 2;
+                int counter = 1;
+                int x = 1;
+                tab[j] = 1;
+                while (counter < tab.Length)
+                {
+                    if (j - x >= 0)
+                    {
+                        tab[j - x] = counter++;
+                    }
+                    if (j + x < tab.Length)
+                    {
+                        tab[j + x++] = ++counter;
+                    }
+                }
+            }
+        }
+        public static void Sort(int[] tab)
+        {
+            string path = @"d:\a4.txt";
+            StreamWriter sw = new StreamWriter(path);
+
+            uint left = (uint)tab.Length / 2;
+            uint right = (uint)tab.Length - 1;
+            Stopwatch stopWatch = new Stopwatch();
+            
+            while (left > 0)
+            {
+                stopWatch.Start();
+                left--;
+                Heapify(tab, left, right);
+                stopWatch.Stop();
+                sw.WriteLine(stopWatch.ElapsedTicks + " L " + left);
+                Console.WriteLine(stopWatch.ElapsedTicks + " L " + left);
+                stopWatch.Reset();
+            }
+
+            while (right > 0)
+            {
+                stopWatch.Start();
+                int buf = tab[left];
+                tab[left] = tab[right];
+                tab[right] = buf;
+                right--;
+                Heapify(tab, left, right);
+                stopWatch.Stop();
+                sw.WriteLine(stopWatch.ElapsedTicks + " L " + left);
+                Console.WriteLine(stopWatch.ElapsedTicks + " P " + right);
+                stopWatch.Reset();
+            }
+            
+           
+            
+            sw.Close();
+        }
+
+        private static void Heapify(int[] t, uint left, uint right)
+        {
+          
+            uint i = left, j = 2 * i + 1;
+            int buf = t[i];
+            
+            while (j <= right)
+            {
+
+                
+
+                if (j < right)
+                    if (t[j] < t[j + 1])
+                        j++;
+                if (buf >= t[j]) break;
+
+                t[i] = t[j];
+                i = j;
+                j = 2 * i + 1;
+                
+                
+            }
+            
+            t[i] = buf;
+            
+        }
+
+    }
+}
