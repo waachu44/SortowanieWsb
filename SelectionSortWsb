@@ -1,0 +1,129 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Diagnostics;
+using System.IO;
+
+namespace SelectionSortWsb
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            //int[] tab = GenAsc(50000); // Wygenerowana tablica liczb rosnących
+            //int[] tab = GenDsc(50000); // Wygenerowana tablica liczb malejących
+            int[] tab = GetNumber(50000); // Wygenerowana tablica liczb losowych
+            SortVshape(tab); // Z wygenerowanej tablicy liczb losowych, została przesortowana na tablice liczb V kształtnych
+            //int[] tab = GenConstant(50); // Wygenerowana tablica liczy stałej
+            Sort(tab);
+           
+            Console.ReadKey();
+        }
+        public static int[] GetNumber(int a)
+        {
+            Random rand = new Random();
+            int[] tab = new int[a];
+
+            for (int i = 0; i < tab.Length; i++)
+            {
+                tab[i] = rand.Next(100);
+            }
+            return tab;
+        }
+        //public static int[] GenAsc(int a)
+        //{
+        //    Random rand = new Random();
+        //    int[] tab = new int[a];
+
+        //    for (int i = 0; i < tab.Length; i++)
+        //    {
+        //        tab[i] = i;
+        //    }
+        //    return tab;
+        //}
+        //public static int[] GenDsc(int a)
+        //{
+        //    Random rand = new Random();
+        //    int[] tab = new int[a];
+
+        //    for (int i = 0; i < tab.Length; i++)
+        //    {
+        //        tab[i] = tab.Length - i;
+        //    }
+        //    return tab;
+        //}
+
+        //public static int[] GenConstant(int a)
+        //{
+        //    Random rand = new Random();
+        //    int[] tab = new int[a];
+
+        //    for (int i = 0; i < tab.Length; i++)
+        //    {
+        //        tab[i] = 3;
+        //    }
+        //    return tab;
+        //}
+        public static void SortVshape(int[] tab)
+        {
+            for (uint i = 1; i < tab.Length; i++)
+            {
+                int j = tab.Length / 2;
+                int counter = 1;
+                int x = 1;
+                tab[j] = 1;
+                while (counter < tab.Length)
+                {
+                    if (j - x >= 0)
+                    {
+                        tab[j - x] = counter++;
+                    }
+                    if (j + x < tab.Length)
+                    {
+                        tab[j + x++] = ++counter;
+                    }
+                }
+            }
+        }
+        public static void Sort(int[] tab)
+        {
+            string path = @"d:\e.txt";
+            // Do string path = @"d:\a.txt"; zapisane sa wyniki tablicy GenAsc
+            // Do string path = @"d:\b.txt"; zapisane sa wyniki tablicy GenDsc
+            // Do string path = @"d:\c.txt"; zapisane sa wyniki tablicy GentNumber
+            StreamWriter sw = new StreamWriter(path);
+            uint k;
+            for (uint i = 0; i <= (tab.Length - 1); i++)
+            {
+                Stopwatch stopWatch = new Stopwatch();
+                stopWatch.Start();
+                int temp = tab[i];
+                k = i;
+               
+
+
+                for (uint j = i + 1; j < tab.Length; j++)
+                    if (tab[j] < temp)
+                    {
+
+                        
+                        k = j;
+                        temp = tab[j];
+                        
+                    }
+
+                tab[k] = tab[i];
+                tab[i] = temp;
+                stopWatch.Stop();
+                sw.WriteLine(stopWatch.ElapsedTicks + " "+(i+1));
+                Console.WriteLine(stopWatch.ElapsedTicks + " "+(i+1));
+                stopWatch.Reset();
+                
+            }
+
+            sw.Close();
+        }
+    }
+}
