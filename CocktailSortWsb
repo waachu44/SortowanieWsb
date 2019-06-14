@@ -1,0 +1,137 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Diagnostics;
+using System.IO;
+
+namespace CocktailSortWsb
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            //int[] tab = GenAsc(50000); // Wygenerowana tablica liczb rosnących
+            //int[] tab = GenDsc(50000); // Wygenerowana tablica liczb malejących
+            int[] tab = GetNumber(50000); // Wygenerowana tablica liczb losowych
+            SortVshape(tab); // Z wygenerowanej tablicy liczb losowych, została przesortowana na tablice liczb V kształtnych
+           // int[] tab = GenConstant(50000); // Wygenerowana tablica liczy stałej
+            Sort(tab);
+            Console.ReadKey();
+        }
+        public static int[] GetNumber(int a)
+        {
+            Random rand = new Random();
+            int[] tab = new int[a];
+
+            for (int i = 0; i < tab.Length; i++)
+            {
+                tab[i] = rand.Next(100);
+            }
+            return tab;
+        }
+        //public static int[] GenAsc(int a)
+        //{
+        //    Random rand = new Random();
+        //    int[] tab = new int[a];
+
+        //    for (int i = 0; i < tab.Length; i++)
+        //    {
+        //        tab[i] = i;
+        //    }
+        //    return tab;
+        //}
+        //public static int[] GenDsc(int a)
+        //{
+        //    Random rand = new Random();
+        //    int[] tab = new int[a];
+
+        //    for (int i = 0; i < tab.Length; i++)
+        //    {
+        //        tab[i] = tab.Length - i;
+        //    }
+        //    return tab;
+        //}
+
+        //public static int[] GenConstant(int a)
+        //{
+        //    Random rand = new Random();
+        //    int[] tab = new int[a];
+
+        //    for (int i = 0; i < tab.Length; i++)
+        //    {
+        //        tab[i] = 3;
+        //    }
+        //    return tab;
+        //}
+        public static void SortVshape(int[] tab)
+        {
+            for (uint i = 1; i < tab.Length; i++)
+            {
+                int j = tab.Length / 2;
+                int counter = 1;
+                int x = 1;
+                tab[j] = 1;
+                while (counter < tab.Length)
+                {
+                    if (j - x >= 0)
+                    {
+                        tab[j - x] = counter++;
+                    }
+                    if (j + x < tab.Length)
+                    {
+                        tab[j + x++] = ++counter;
+                    }
+                }
+            }
+        }
+        public static void Sort(int[] tab)
+        {
+            string path = @"d:\b3.txt";
+            StreamWriter sw = new StreamWriter(path);
+
+            int left = 1, right = tab.Length - 1, k = tab.Length - 1;
+            do
+            {
+                
+                Stopwatch stopWatch = new Stopwatch();
+                stopWatch.Start();
+
+              
+                for (int j = right; j >= left; j--)
+                    if (tab[j - 1] > tab[j])
+                    {
+                        int temp = tab[j - 1];
+                        tab[j - 1] = tab[j];
+                        tab[j] = temp;
+                        k = j;
+                    }
+
+                left = k + 1;
+
+                for (int j = left; j <= right; j++)
+                    if (tab[j - 1] > tab[j])
+                    {
+                        int temp = tab[j - 1];
+                        tab[j - 1] = tab[j];
+                        tab[j] = temp;
+                        k = j;
+                    }
+               
+                right = k - 1;
+                stopWatch.Stop();
+                sw.WriteLine(stopWatch.ElapsedTicks + " L " + left);
+                sw.WriteLine(stopWatch.ElapsedTicks + " P " + right);
+                Console.WriteLine(stopWatch.ElapsedTicks + " L " + left);
+                Console.WriteLine(stopWatch.ElapsedTicks + " P " + right);
+                stopWatch.Reset();
+               
+            } while
+                (left <= right);
+            sw.Close();
+        }
+    } 
+   
+}
+
